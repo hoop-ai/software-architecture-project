@@ -3,22 +3,65 @@
 ## How to Compile and Run
 
 ### Prerequisites
-- Java 8 or later (JDK) installed
+- Java 8 or later (JDK) installed — [Download OpenJDK](https://adoptium.net/)
 - Terminal / Command Prompt access
 
-### Steps
+### Step 1: Compile
 
 ```bash
-# Step 1: Navigate to the project directory
+# Navigate to the project directory
 cd "Software Architecture"
 
-# Step 2: Create the output directory
+# Create the output directory (only needed once)
 mkdir -p bin
 
-# Step 3: Compile all Java source files
+# Compile all Java source files
 javac -d bin src/main/java/*.java
+```
 
-# Step 4: Run the program
+> **Troubleshooting:** If `javac` is not found, Java JDK is not on your system PATH.
+> Install it from [adoptium.net](https://adoptium.net/) and restart your terminal.
+
+### Step 2: Run the Interactive Application
+
+```bash
+java -cp bin TaskManagementApp
+```
+
+This launches the **interactive task management system**. You will see a menu:
+
+```
+  MAIN MENU
+  1. Create a new task          ← Uses Factory Method pattern
+  2. View all tasks
+  3. View tasks (sorted)        ← Uses Strategy pattern
+  4. Change sorting strategy    ← Swap strategy at runtime
+  5. Change task status         ← State machine transitions
+  6. Filter tasks by status
+  7. View task details
+  8. Remove a task
+  9. View summary
+  0. Exit
+```
+
+Type a number and press Enter to use each feature. The app will ask you follow-up questions (task type, title, etc.) — just type your answers and press Enter.
+
+**Quick demo walkthrough:**
+
+| Step | What to type | What it demonstrates |
+|---|---|---|
+| `1` → `BUG` → `Login crash` → `App crashes` → `5` → `n` | Creates a high-priority bug | **Factory Method** — BugTaskFactory creates a BugTask |
+| `1` → `FEATURE` → `Dark mode` → `Add dark theme` → `2` → `n` | Creates a low-priority feature | **Factory Method** — FeatureTaskFactory creates a FeatureTask |
+| `3` | View sorted tasks | **Strategy** — UrgentFirst sorts by priority (bug appears first) |
+| `4` → `2` | Switch to DeadlineFirst | **Strategy** — swap algorithm at runtime |
+| `3` | View sorted tasks again | Same tasks, different order — strategy swap worked |
+| `5` → `1` → `IN_PROGRESS` | Move bug to In Progress | **State Machine** — valid transition |
+| `5` → `1` → `DONE` | Try to skip to Done | **State Machine** — invalid transition blocked! |
+| `0` | Exit the application | |
+
+### Step 3: Run the Automated Tests
+
+```bash
 java -cp bin Main
 ```
 

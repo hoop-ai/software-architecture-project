@@ -15,23 +15,59 @@ A task management system built in pure Java demonstrating two design patterns: *
 - Java 8 or later (JDK) — [Download OpenJDK](https://adoptium.net/)
 - A terminal (Command Prompt, PowerShell, or Git Bash)
 
-### Compile and Run
+### Step 1: Compile
 
 ```bash
 # Navigate to the project folder
 cd "Software Architecture"
 
-# Create output directory
+# Create output directory (only needed once)
 mkdir -p bin
 
 # Compile all source files
 javac -d bin src/main/java/*.java
+```
 
-# Run the program
+> **Note:** If `javac` is not recognized, you need to install Java JDK first (see Prerequisites above).
+
+### Step 2: Run the Interactive Application
+
+```bash
+java -cp bin TaskManagementApp
+```
+
+This launches the **interactive task management system** with a menu:
+
+```
+  MAIN MENU
+  1. Create a new task          ← Uses Factory Method pattern
+  2. View all tasks
+  3. View tasks (sorted)        ← Uses Strategy pattern
+  4. Change sorting strategy    ← Swap strategy at runtime
+  5. Change task status         ← State machine transitions
+  6. Filter tasks by status
+  7. View task details
+  8. Remove a task
+  9. View summary
+  0. Exit
+```
+
+**Quick demo to try:**
+1. Type `1` → Enter → `BUG` → Enter → type a title → Enter → type a description → Enter → `5` → Enter → `n` → Enter
+2. Type `1` → Enter → `FEATURE` → Enter → type a title → Enter → type a description → Enter → `2` → Enter → `n` → Enter
+3. Type `3` → Enter → see tasks sorted by priority (highest first)
+4. Type `4` → Enter → `2` → Enter → switch to DeadlineFirst sorting
+5. Type `5` → Enter → pick a task ID → Enter → `IN_PROGRESS` → Enter → move a task forward
+6. Type `0` → Enter → exit
+
+### Step 3: Run the Automated Tests
+
+```bash
 java -cp bin Main
 ```
 
-You should see output ending with:
+This runs 6 automated test sections that verify the system works correctly. You should see output ending with:
+
 ```
 ##########################################################
 #                  ALL TESTS PASSED                      #
@@ -45,7 +81,7 @@ You should see output ending with:
 ```
 ├── src/
 │   └── main/
-│       └── java/                    ← All 16 Java source files
+│       └── java/                    ← All 17 Java source files
 │           ├── Task.java                 (Product interface)
 │           ├── AbstractTask.java         (Abstract base class)
 │           ├── BugTask.java              (Concrete task — bugs)
@@ -61,7 +97,8 @@ You should see output ending with:
 │           ├── DeadlineFirstStrategy.java (Sort by deadline)
 │           ├── SeverityFirstStrategy.java (Sort bugs by severity)
 │           ├── TaskManager.java          (Central coordinator)
-│           └── Main.java                 (Entry point + all tests)
+│           ├── TaskManagementApp.java    (Interactive console application)
+│           └── Main.java                 (Automated tests — 6 test sections)
 │
 ├── docs/
 │   ├── report/
@@ -157,7 +194,14 @@ All diagrams are available in two formats:
 
 ---
 
-## Testing
+## Two Ways to Use the System
+
+| Program | Command | Purpose |
+|---|---|---|
+| **Interactive App** | `java -cp bin TaskManagementApp` | Use the system — create tasks, sort them, change status, view details |
+| **Automated Tests** | `java -cp bin Main` | Verify the system — runs 6 test sections, all should show `[PASS]` |
+
+## Automated Test Details
 
 The `Main.java` file contains 6 test sections that verify the system works correctly:
 
