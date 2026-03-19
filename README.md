@@ -4,7 +4,7 @@
 
 A task management system built in pure Java demonstrating two design patterns: **Factory Method** (Creational) and **Strategy** (Behavioral). The system manages different types of software development tasks (bugs, features, documentation) with swappable prioritization algorithms.
 
-**Submission Deadline:** June 05, 2026
+**Submission Deadline:** June 05, 2026 | **Last Updated:** March 19, 2026
 
 ---
 
