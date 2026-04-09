@@ -349,7 +349,7 @@ In both counterfactuals the core issue is the same: structural decisions that *s
 
 ### Achievements
 
-This project successfully designed, implemented, documented, and tested a Task Management System that composes two GoF design patterns — Factory Method and Strategy — in pure Java with zero external dependencies. The final deliverable comprises 16 Java source files, seven UML diagrams, a full written report, a structured test suite with six sections, and an interactive console application. Every SOLID principle is explicitly exercised by the tests, and both patterns are shown to coexist naturally inside a single coordinator class.
+This project successfully designed, implemented, documented, and tested a Task Management System that composes two GoF design patterns — Factory Method and Strategy — in pure Java with zero external dependencies. The final deliverable comprises 17 Java source files, seven UML diagrams, a full written report, a structured six-section test suite (`Main.java`), and a separate interactive menu-driven console application (`TaskManagementApp.java`). Every SOLID principle is explicitly exercised by the tests, and both patterns coexist naturally inside a single coordinator class that also layers a simplified Service Locator registry for runtime factory lookup.
 
 ### Lessons Learned
 
