@@ -10,29 +10,34 @@ A task management system built in pure Java demonstrating two design patterns: *
 
 ## Quick Start
 
+Pure Java, zero dependencies. Three commands and you're running.
+
 ### Prerequisites
 
-- Java 8 or later (JDK) — [Download OpenJDK](https://adoptium.net/)
-- A terminal (Command Prompt, PowerShell, or Git Bash)
+- **JDK 8 or later** — verify with `java -version` and `javac -version`. If missing, install [Eclipse Temurin](https://adoptium.net/) (cross-platform), or `winget install Microsoft.OpenJDK.21` on Windows, `brew install openjdk` on macOS, or `sudo apt install default-jdk` on Linux.
+- **Any terminal** — Windows CMD, PowerShell, Git Bash, macOS Terminal, or Linux shells. The commands below are identical in all of them.
 
 ### Step 1: Compile
 
-```bash
-# Navigate to the project folder
-cd "Software Architecture"
+From the project root, run:
 
-# Create output directory (only needed once)
-mkdir -p bin
-
-# Compile all source files
+```sh
 javac -d bin src/main/java/*.java
 ```
 
-> **Note:** If `javac` is not recognized, you need to install Java JDK first (see Prerequisites above).
+This creates a `bin/` folder and compiles all 16 source files. No output means success.
 
-### Step 2: Run the Interactive Application
+### Step 2: Run the Automated Tests
 
-```bash
+```sh
+java -cp bin Main
+```
+
+Look for `ALL TESTS PASSED` at the bottom — that confirms everything works.
+
+### Step 3: Run the Interactive Application
+
+```sh
 java -cp bin TaskManagementApp
 ```
 
@@ -60,19 +65,7 @@ This launches the **interactive task management system** with a menu:
 5. Type `5` → Enter → pick a task ID → Enter → `IN_PROGRESS` → Enter → move a task forward
 6. Type `0` → Enter → exit
 
-### Step 3: Run the Automated Tests
-
-```bash
-java -cp bin Main
-```
-
-This runs 6 automated test sections that verify the system works correctly. You should see output ending with:
-
-```
-##########################################################
-#                  ALL TESTS PASSED                      #
-##########################################################
-```
+> **Troubleshooting:** see [docs/design/test-documentation.md](docs/design/test-documentation.md#troubleshooting) for fixes to common issues (`javac` not found, wrong folder, garbled output, etc.).
 
 ---
 

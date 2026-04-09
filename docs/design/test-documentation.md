@@ -2,39 +2,93 @@
 
 ## How to Compile and Run
 
+This project is pure Java with **zero external dependencies**. If you have a JDK installed, you can compile and run it in three commands — no build tool, no Maven, no Gradle.
+
 ### Prerequisites
-- Java 8 or later (JDK) installed — [Download OpenJDK](https://adoptium.net/)
-- Terminal / Command Prompt access
+
+**JDK 8 or later** (JDK 11+ recommended). Check with:
+
+```sh
+java -version
+javac -version
+```
+
+If both print a version, you're ready. If not, install one of:
+
+- [Eclipse Temurin](https://adoptium.net/) (recommended, cross-platform)
+- `winget install Microsoft.OpenJDK.21` (Windows)
+- `brew install openjdk` (macOS)
+- `sudo apt install default-jdk` (Debian/Ubuntu)
+
+**A terminal.** Any shell works — Windows CMD, PowerShell, Git Bash, macOS Terminal, or Linux shells. The commands below are identical across all of them.
+
+### Step 0: Open a terminal in the project folder
+
+Either open this repo in VS Code → `Terminal` → `New Terminal`, or navigate manually:
+
+```sh
+cd path/to/software-architecture-project
+```
+
+Verify you're in the right place:
+
+```sh
+ls src/main/java
+```
+
+You should see `Main.java`, `TaskManagementApp.java`, and 14 other `.java` files.
 
 ### Step 1: Compile
 
-```bash
-# Navigate to the project directory
-cd "Software Architecture"
+Run this single command (works in **any shell** — CMD, PowerShell, bash, zsh):
 
-# Create the output directory (only needed once)
-mkdir -p bin
-
-# Compile all Java source files
+```sh
 javac -d bin src/main/java/*.java
 ```
 
-> **Troubleshooting:** If `javac` is not found, Java JDK is not on your system PATH.
-> Install it from [adoptium.net](https://adoptium.net/) and restart your terminal.
+What it does:
 
-### Step 2: Run the Interactive Application
+- Creates a `bin/` folder automatically (no `mkdir` needed)
+- Compiles all 16 Java source files into `.class` files
+- No output on success — silence means it worked
 
-```bash
+**Verify it worked:**
+
+```sh
+ls bin
+```
+
+You should see ~16 `.class` files (e.g. `Main.class`, `TaskManager.class`, ...).
+
+### Step 2: Run the Automated Test Suite
+
+```sh
+java -cp bin Main
+```
+
+This runs 6 automated test sections. Scroll to the bottom — you should see:
+
+```text
+##########################################################
+#                  ALL TESTS PASSED                      #
+##########################################################
+```
+
+If you see that banner, **everything works.** ✅
+
+### Step 3: Run the Interactive Application
+
+```sh
 java -cp bin TaskManagementApp
 ```
 
 This launches the **interactive task management system**. You will see a menu:
 
-```
+```text
   MAIN MENU
   1. Create a new task          ← Uses Factory Method pattern
   2. View all tasks
-  3. View tasks (sorted)        ← Uses Strategy pattern
+  3. View tasks (sorted by current strategy)  ← Uses Strategy pattern
   4. Change sorting strategy    ← Swap strategy at runtime
   5. Change task status         ← State machine transitions
   6. Filter tasks by status
@@ -189,3 +243,55 @@ After running the program, verify:
 - [ ] Test 6 catches all 6 edge cases (6/6 passed)
 - [ ] Final summary shows "ALL TESTS PASSED"
 - [ ] No compilation warnings or errors
+
+---
+
+## Troubleshooting
+
+### `javac` or `java` is not recognized
+
+Your JDK is not on the system `PATH`. Pick one:
+
+- **Quickest fix (Windows, if you use VS Code):** VS Code's Red Hat Java extension bundles a JDK. In Git Bash you can point your current terminal at it:
+
+  ```sh
+  export PATH="$HOME/.vscode/extensions/redhat.java-1.53.0-win32-x64/jre/21.0.10-win32-x86_64/bin:$PATH"
+  ```
+
+  (Adjust the version number if your extension is newer.)
+
+- **Proper fix:** Install a JDK — see [Prerequisites](#prerequisites) — and restart your terminal.
+
+### `error: file not found: src/main/java/*.java`
+
+You're not in the project root. Run `pwd` (bash/PowerShell) or `cd` (CMD) to check. Navigate to the folder that contains `src/` and `README.md`, then retry.
+
+### `Error: Could not find or load main class Main`
+
+The `bin/` folder is empty or missing — compilation didn't run or failed. Re-run Step 1:
+
+```sh
+javac -d bin src/main/java/*.java
+```
+
+Make sure it completes with no error output, then retry Step 2.
+
+### Wildcards don't expand (rare, old shells)
+
+If `src/main/java/*.java` isn't being recognized, pass the files explicitly using Java's built-in argument file support:
+
+```sh
+javac -d bin src/main/java/Task.java src/main/java/AbstractTask.java src/main/java/BugTask.java src/main/java/FeatureTask.java src/main/java/DocumentationTask.java src/main/java/TaskStatus.java src/main/java/TaskFactory.java src/main/java/BugTaskFactory.java src/main/java/FeatureTaskFactory.java src/main/java/DocumentationTaskFactory.java src/main/java/PriorityStrategy.java src/main/java/UrgentFirstStrategy.java src/main/java/DeadlineFirstStrategy.java src/main/java/SeverityFirstStrategy.java src/main/java/TaskManager.java src/main/java/TaskManagementApp.java src/main/java/Main.java
+```
+
+### Output looks garbled / strange characters
+
+The tests use a few Unicode symbols. If your terminal shows `?` or boxes, set UTF-8:
+
+- **Windows CMD:** `chcp 65001` before running
+- **PowerShell:** `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8`
+- **Git Bash / macOS / Linux:** already UTF-8 by default
+
+### `Exception in thread "main" java.lang.UnsupportedClassVersionError`
+
+Your `java` version is older than your `javac` version. Run `java -version` and `javac -version` — they should match. If not, install a matching JDK.
