@@ -8,6 +8,22 @@ A task management system built in pure Java demonstrating two design patterns: *
 
 ---
 
+## Quick Start (GUI demo) — easiest
+
+The fastest way to see the project running:
+
+1. Unzip `SEN3006_Task_Management_System.zip` (or clone the repo).
+2. Double-click **`TaskManagerGUI.jar`** (or **`run-gui.bat`** on Windows / **`run-gui.sh`** on Mac/Linux).
+3. The Task Manager window opens. Use the **Demo** menu to load preset scenarios, or fill in the form to add your own. Switch the **Sort by** dropdown to see the Strategy pattern reorder the table live.
+
+Requires Java 8 or newer. If double-click does not work on your OS, run from a terminal:
+
+```sh
+java -jar TaskManagerGUI.jar
+```
+
+---
+
 ## Quick Start
 
 Pure Java, zero dependencies. Three commands and you're running.
@@ -22,10 +38,10 @@ Pure Java, zero dependencies. Three commands and you're running.
 From the project root, run:
 
 ```sh
-javac -d bin src/main/java/*.java
+javac -d bin src/main/java/*.java src/main/java/gui/*.java
 ```
 
-This creates a `bin/` folder and compiles all 16 source files. No output means success.
+This creates a `bin/` folder and compiles all source files (engine + GUI). No output means success.
 
 ### Step 2: Run the Automated Tests
 
@@ -187,11 +203,12 @@ All diagrams are available in two formats:
 
 ---
 
-## Two Ways to Use the System
+## Three Ways to Use the System
 
 | Program | Command | Purpose |
 |---|---|---|
-| **Interactive App** | `java -cp bin TaskManagementApp` | Use the system — create tasks, sort them, change status, view details |
+| **Graphical UI** | `java -jar TaskManagerGUI.jar` | Click around — visual demo of all patterns, easiest for showing the project |
+| **Interactive App** | `java -cp bin TaskManagementApp` | Console menu — create tasks, sort them, change status, view details |
 | **Automated Tests** | `java -cp bin Main` | Verify the system — runs 6 test sections, all should show `[PASS]` |
 
 ## Automated Test Details
@@ -275,3 +292,16 @@ Invalid transitions (e.g., OPEN → DONE) throw an `IllegalArgumentException`.
 3. Press `Alt+D` to preview the diagram
 
 **Option 3 — Online:** Copy the `.puml` content and paste at [plantuml.com](https://www.plantuml.com/plantuml/uml/)
+
+---
+
+## Building from source
+
+To rebuild `TaskManagerGUI.jar` after editing source files:
+
+```sh
+bash build-jar.sh    # Mac/Linux/Git Bash
+build-jar.bat        # Windows cmd
+```
+
+This recompiles all classes (engine + GUI) and packages them with a `Main-Class: TaskManagerGUI` manifest. The resulting JAR is the one shipped to the professor.
