@@ -1,6 +1,9 @@
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
+import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.FlowLayout;
 
 /**
@@ -50,6 +53,7 @@ public class TaskTablePanel extends JPanel {
 
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setRowHeight(24);
+        table.setDefaultRenderer(Object.class, new StatusColorRenderer());
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) onSelectionChanged.run();
         });
@@ -93,5 +97,26 @@ public class TaskTablePanel extends JPanel {
 
     public void setOnSelectionChanged(Runnable callback) {
         this.onSelectionChanged = callback == null ? () -> {} : callback;
+    }
+
+    /** Renders rows with a background color based on the task's status. */
+    private class StatusColorRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(
+                JTable t, Object value, boolean selected, boolean focused, int row, int col) {
+            Component c = super.getTableCellRendererComponent(t, value, selected, focused, row, col);
+            if (selected) return c;
+            Task task = model.getTaskAt(t.convertRowIndexToModel(row));
+            if (task == null) return c;
+            switch (task.getStatus()) {
+                case OPEN:        c.setBackground(new Color(0xEEEEEE)); break;
+                case IN_PROGRESS: c.setBackground(new Color(0xCFE2FF)); break;
+                case REVIEW:      c.setBackground(new Color(0xFFF3CD)); break;
+                case BLOCKED:     c.setBackground(new Color(0xF8D7DA)); break;
+                case DONE:        c.setBackground(new Color(0xD1E7DD)); break;
+                default:          c.setBackground(Color.WHITE);
+            }
+            return c;
+        }
     }
 }
