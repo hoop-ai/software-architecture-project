@@ -36,6 +36,7 @@ public class TaskManagerGUI extends JFrame {
         setSize(950, 700);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
+        setJMenuBar(buildMenuBar());
 
         add(formPanel, BorderLayout.NORTH);
 
@@ -133,6 +134,40 @@ public class TaskManagerGUI extends JFrame {
         }
         sb.append("  |  Strategy: ").append(manager.getCurrentStrategyName());
         statusBar.setText(sb.toString());
+    }
+
+    private JMenuBar buildMenuBar() {
+        JMenuBar bar = new JMenuBar();
+
+        JMenu demoMenu = new JMenu("Demo");
+        demoMenu.add(menuItem("Load Strategy Demo (Main.java Test 2)",
+                () -> { DemoScenarios.loadStrategyDemo(manager); refreshAll(); }));
+        demoMenu.add(menuItem("Load Lifecycle Demo (Main.java Test 3)",
+                () -> { DemoScenarios.loadLifecycleDemo(manager); refreshAll(); }));
+        demoMenu.add(menuItem("Load Integration Demo (Main.java Test 4)",
+                () -> { DemoScenarios.loadIntegrationDemo(manager); refreshAll(); }));
+        demoMenu.addSeparator();
+        demoMenu.add(menuItem("Clear All Tasks",
+                () -> { DemoScenarios.clearAll(manager); refreshAll(); }));
+        bar.add(demoMenu);
+
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.add(menuItem("About", () -> JOptionPane.showMessageDialog(this,
+                "SEN3006 Task Management System — GUI demo\n"
+                        + "Patterns: Factory Method + Strategy\n"
+                        + "Engine: pure Java, zero external dependencies\n"
+                        + "Use the form to create tasks, click rows to transition them,\n"
+                        + "switch the Sort dropdown to see Strategy swap live.",
+                "About", JOptionPane.INFORMATION_MESSAGE)));
+        bar.add(helpMenu);
+
+        return bar;
+    }
+
+    private JMenuItem menuItem(String label, Runnable action) {
+        JMenuItem item = new JMenuItem(label);
+        item.addActionListener(e -> action.run());
+        return item;
     }
 
     public static void main(String[] args) {
