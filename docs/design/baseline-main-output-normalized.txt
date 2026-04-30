@@ -1,0 +1,228 @@
+##########################################################
+#                                                        #
+#       SEN3006 - SOFTWARE ARCHITECTURE PROJECT          #
+#       Task Management System                           #
+#       Design Patterns: Factory Method + Strategy       #
+#                                                        #
+##########################################################
+
+==========================================================
+  TEST 1: Factory Method Pattern Demo
+==========================================================
+Demonstrating that each factory creates the correct task type
+without the client knowing the concrete class.
+
+
+--- Tasks created via Factory Method ---
+  1. Task[id=1, type=BUG, title='Login crash', status=OPEN, priority=5, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  2. Task[id=2, type=FEATURE, title='Dark mode', status=OPEN, priority=3, deadline=none, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  3. Task[id=3, type=DOCUMENTATION, title='API docs', status=OPEN, priority=2, deadline=none, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+
+--- Task created with deadline (Template Method) ---
+  Task[id=4, type=BUG, title='Memory leak', status=OPEN, priority=4, deadline=2026-04-15, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+
+--- Task created with full parameters (specialized factory method) ---
+  Task[id=5, type=BUG, title='Data corruption', status=OPEN, priority=5, deadline=none, created=<TIME>] | BugDetails[severity=CRITICAL, stepsToReproduce='1. Insert record 2. Read back 3. Data differs']
+  Severity: CRITICAL
+  Steps: 1. Insert record 2. Read back 3. Data differs
+
+[PASS] Factory Method creates correct types polymorphically.
+
+==========================================================
+  TEST 2: Strategy Pattern Demo
+==========================================================
+Demonstrating that the same task list is sorted differently
+by swapping the prioritization strategy at runtime.
+
+
+--- Strategy 1: UrgentFirstStrategy (highest priority first) ---
+  Strategy: UrgentFirstStrategy
+  1. Task[id=6, type=BUG, title='Fix payment bug', status=OPEN, priority=5, deadline=2026-05-01, created=<TIME>] | BugDetails[severity=CRITICAL, stepsToReproduce='']
+  2. Task[id=10, type=FEATURE, title='Export CSV', status=OPEN, priority=4, deadline=2026-05-10, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  3. Task[id=9, type=DOCUMENTATION, title='Setup guide', status=OPEN, priority=3, deadline=2026-04-20, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+  4. Task[id=7, type=FEATURE, title='Add search', status=OPEN, priority=2, deadline=2026-06-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  5. Task[id=8, type=BUG, title='UI glitch', status=OPEN, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+
+--- Strategy 2: DeadlineFirstStrategy (earliest deadline first) ---
+  Strategy: DeadlineFirstStrategy
+  1. Task[id=9, type=DOCUMENTATION, title='Setup guide', status=OPEN, priority=3, deadline=2026-04-20, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+  2. Task[id=6, type=BUG, title='Fix payment bug', status=OPEN, priority=5, deadline=2026-05-01, created=<TIME>] | BugDetails[severity=CRITICAL, stepsToReproduce='']
+  3. Task[id=10, type=FEATURE, title='Export CSV', status=OPEN, priority=4, deadline=2026-05-10, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  4. Task[id=7, type=FEATURE, title='Add search', status=OPEN, priority=2, deadline=2026-06-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  5. Task[id=8, type=BUG, title='UI glitch', status=OPEN, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+
+--- Strategy 3: SeverityFirstStrategy (bugs first by severity) ---
+  Strategy: SeverityFirstStrategy
+  1. Task[id=6, type=BUG, title='Fix payment bug', status=OPEN, priority=5, deadline=2026-05-01, created=<TIME>] | BugDetails[severity=CRITICAL, stepsToReproduce='']
+  2. Task[id=8, type=BUG, title='UI glitch', status=OPEN, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  3. Task[id=10, type=FEATURE, title='Export CSV', status=OPEN, priority=4, deadline=2026-05-10, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  4. Task[id=9, type=DOCUMENTATION, title='Setup guide', status=OPEN, priority=3, deadline=2026-04-20, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+  5. Task[id=7, type=FEATURE, title='Add search', status=OPEN, priority=2, deadline=2026-06-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+
+[PASS] Same tasks, three different orderings via Strategy swap.
+
+==========================================================
+  TEST 3: Task Lifecycle (State Transitions) Demo
+==========================================================
+Demonstrating the TaskStatus state machine with valid
+and invalid transitions.
+
+
+--- Valid transition path: OPEN -> IN_PROGRESS -> REVIEW -> DONE ---
+  Current status: OPEN
+  After transition: IN_PROGRESS
+  After transition: REVIEW
+  After transition: DONE
+
+--- Blocked path: OPEN -> BLOCKED -> OPEN -> IN_PROGRESS ---
+  Current status: OPEN
+  After BLOCKED: BLOCKED
+  After unblock (OPEN): OPEN
+  After IN_PROGRESS: IN_PROGRESS
+
+--- Invalid transition: OPEN -> DONE (should fail) ---
+  Caught expected error: Cannot transition from OPEN to DONE
+  [PASS] State machine correctly rejects invalid transitions.
+
+--- Terminal state: DONE -> any (should fail) ---
+  Caught expected error: Cannot transition from DONE to OPEN
+  [PASS] Terminal state correctly blocks all transitions.
+
+==========================================================
+  TEST 4: TaskManager Integration Demo
+==========================================================
+Demonstrating the full workflow: create tasks, filter,
+transition, prioritize, and summarize.
+
+
+--- All tasks created ---
+  1. Task[id=14, type=BUG, title='Server timeout', status=OPEN, priority=5, deadline=2026-04-01, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  2. Task[id=15, type=FEATURE, title='User profiles', status=OPEN, priority=3, deadline=2026-05-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  3. Task[id=16, type=BUG, title='Typo in footer', status=OPEN, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  4. Task[id=17, type=DOCUMENTATION, title='API reference', status=OPEN, priority=2, deadline=none, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+  5. Task[id=18, type=FEATURE, title='Notifications', status=OPEN, priority=4, deadline=2026-04-30, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+
+--- Tasks filtered by status: OPEN ---
+  1. Task[id=15, type=FEATURE, title='User profiles', status=OPEN, priority=3, deadline=2026-05-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  2. Task[id=17, type=DOCUMENTATION, title='API reference', status=OPEN, priority=2, deadline=none, created=<TIME>] | DocDetails[documentType=API, targetAudience='Developers']
+  3. Task[id=18, type=FEATURE, title='Notifications', status=OPEN, priority=4, deadline=2026-04-30, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+
+--- Tasks filtered by status: IN_PROGRESS ---
+  1. Task[id=14, type=BUG, title='Server timeout', status=IN_PROGRESS, priority=5, deadline=2026-04-01, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+
+--- Tasks filtered by status: REVIEW ---
+  1. Task[id=16, type=BUG, title='Typo in footer', status=REVIEW, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+
+--- Task Summary ---
+=== Task Summary ===
+  Total tasks: 5
+  OPEN: 3
+  IN_PROGRESS: 1
+  REVIEW: 1
+  Current strategy: UrgentFirstStrategy
+
+--- Removing task: API reference ---
+  Tasks remaining: 4
+
+[PASS] Full TaskManager workflow demonstrated.
+
+==========================================================
+  TEST 5: SOLID Principles Demo
+==========================================================
+Demonstrating that the system follows SOLID principles.
+
+
+--- OCP: Adding a new strategy at runtime (no code changes needed) ---
+  Custom 'lowest-first' strategy applied.
+  Prioritized tasks (lowest priority first):
+  1. Task[id=16, type=BUG, title='Typo in footer', status=REVIEW, priority=1, deadline=none, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  2. Task[id=15, type=FEATURE, title='User profiles', status=OPEN, priority=3, deadline=2026-05-15, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  3. Task[id=18, type=FEATURE, title='Notifications', status=OPEN, priority=4, deadline=2026-04-30, created=<TIME>] | FeatureDetails[estimatedEffort=8h, businessValue=5/10]
+  4. Task[id=14, type=BUG, title='Server timeout', status=IN_PROGRESS, priority=5, deadline=2026-04-01, created=<TIME>] | BugDetails[severity=MEDIUM, stepsToReproduce='']
+  [PASS] New strategy added without modifying any existing class.
+
+--- LSP: All factories work through the TaskFactory reference ---
+  Factory: BugTaskFactory -> Task type: BUG
+  Factory: FeatureTaskFactory -> Task type: FEATURE
+  Factory: DocumentationTaskFactory -> Task type: DOCUMENTATION
+  [PASS] All factories substitutable via base type reference.
+
+--- DIP: TaskManager depends on interfaces, not concrete classes ---
+  TaskManager field types:
+    - tasks: List<Task>          (interface)
+    - strategy: PriorityStrategy (interface)
+    - factories: TaskFactory      (abstract class)
+  No direct references to BugTask, FeatureTask, etc.
+  [PASS] All dependencies point toward abstractions.
+
+--- SRP: Each class has a single responsibility ---
+  - Task/AbstractTask: Holds task data
+  - TaskFactory: Creates tasks (Factory Method)
+  - PriorityStrategy: Sorts tasks (Strategy)
+  - TaskStatus: Defines states and transitions
+  - TaskManager: Coordinates all components
+  - Main: Demos and tests the system
+  [PASS] No class does more than one thing.
+
+--- ISP: Interfaces are focused and minimal ---
+  - Task interface: Only task-related methods (no fat interface)
+  - PriorityStrategy: Single method — sort()
+  - Type-specific methods (getSeverity, getEffort) on concrete classes only
+  [PASS] No client forced to depend on unused methods.
+
+==========================================================
+  TEST 6: Edge Cases and Error Handling
+==========================================================
+Demonstrating that the system handles invalid inputs gracefully.
+
+
+--- Edge Case 1: Invalid priority (out of 1-5 range) ---
+  Caught: Priority must be between 1 and 5, got: 0
+  [PASS] Priority validation works.
+
+--- Edge Case 2: Null title ---
+  Caught: Title must not be null or blank.
+  [PASS] Null title rejected.
+
+--- Edge Case 3: Unknown task type ---
+  Caught: No factory registered for task type: UNKNOWN_TYPE. Available types: [DOCUMENTATION, BUG, FEATURE]
+  [PASS] Unknown type rejected with available types listed.
+
+--- Edge Case 4: Task not found by ID ---
+  Caught: No task found with ID: 99999
+  [PASS] Non-existent task ID rejected.
+
+--- Edge Case 5: Null strategy ---
+  Caught: Strategy must not be null.
+  [PASS] Null strategy rejected.
+
+--- Edge Case 6: Case-insensitive task type ---
+  Created task with type 'bug' (lowercase): BUG
+  [PASS] Case-insensitive lookup works.
+
+--- Edge Case Summary ---
+  Passed: 6/6
+  [PASS] All edge cases handled correctly.
+
+==========================================================
+  FINAL SUMMARY
+==========================================================
+  All 6 test sections passed successfully.
+
+  Design Patterns Implemented:
+    1. Factory Method (Creational) — TaskFactory hierarchy
+    2. Strategy (Behavioral) — PriorityStrategy hierarchy
+
+  SOLID Principles Demonstrated:
+    S - Single Responsibility: Each class has one job
+    O - Open/Closed: Extend via new classes, not modification
+    L - Liskov Substitution: All subtypes are interchangeable
+    I - Interface Segregation: Focused, minimal interfaces
+    D - Dependency Inversion: Depend on abstractions
+
+  Total classes: 16 (2 interfaces, 1 enum, 1 abstract, 12 concrete)
+  External dependencies: 0 (pure Java standard library)
+
+##########################################################
+#                  ALL TESTS PASSED                      #
+##########################################################
